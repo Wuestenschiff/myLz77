@@ -4,8 +4,10 @@ CONFIG -= app_bundle
 CONFIG -= qt
 
 SOURCES += main.c \
-    enc.c
+    enc.c \
+    globals.c
 
 HEADERS += \
-    enc.h
+    enc.h \
+    globals.h
 
