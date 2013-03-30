@@ -2,37 +2,50 @@
 #include <stdio.h>
 #include "enc.h"
 
+int fileHasEnded=0;
+
 //Fill the PV_buf
 void initializePV(FILE *input, char *rbuf){
-    int i;
+    int i=0;
     char c;
-    while((c=fgetc(input))!=EOF && (i < PV_BUF_LENGTH)){
+    while((i < PV_BUF_LENGTH) &&  (c=fgetc(input))!=EOF){
         rbuf[PV_index(i++)]=c;
+    }
+    if (c==EOF){
+        rbuf[PV_index(i)]=c;
+        fileHasEnded=1;
     }
 }
 
 void encode(FILE *input, char *rbuf){
     Match match;
-    while(rbuf[PV_index(0)!=EOF]){
+    while(rbuf[PV_index(0)]!=EOF){
         match=searchMatch(rbuf);
-        printf("%d\t&d\t%c\n",match.offset,match.length,rbuf[S_index(match.length)]);
-        shiftBuf(input ,match.length+1,rbuf);
+        printf("%d\t%d\t%c\n",match.offset,match.length,rbuf[PV_index(match.length)]);
+        shiftBuf(match.length+1,input,rbuf);
     }
 
 }
 
 void shiftBuf(int num_Of_Chars, FILE *input, char *rbuf){
     int i;
+    char c;
     //shift the rindbuffer
-    pvBufStart=(pvBufStart+num_Of_Chars)%(T_BUF_LENGTH);
+    sBufStart=(sBufStart+num_Of_Chars)%(T_BUF_LENGTH);
     //refill PV_Buf
     for(i=num_Of_Chars-1; i>=0;i--){
-        rbuf[PV_index(PV_BUF_LENGTH-i)]=fgetc(input);
+        if(!fileHasEnded){
+            c=fgetc(input);
+            rbuf[PV_index(PV_BUF_LENGTH-1-i)]=c;
+            if(c==EOF){
+                fileHasEnded=1;
+            }
+        }
     }
 }
 
 Match searchMatch(char *rbuf){
-    Match bestMatch={0,0},match={0,0};
+    Match bestMatch={0,0},match;
     int i1,i2;
     for (i1=S_BUF_LENGTH-1;i1>=0;i1--){
         match.length=0;
@@ -46,16 +59,15 @@ Match searchMatch(char *rbuf){
             bestMatch=match;
         }
     }
-
-
    return bestMatch;
 }
 
 //calculate the index of a given char in Previebuffer in the Ringbuffer
 int PV_index(int i){
-    return (pvBufStart+i)%(T_BUF_LENGTH);
+    return (sBufStart+i+S_BUF_LENGTH)%(T_BUF_LENGTH);
 }
 //calculate the index of a given char in Searchbuffer in the Ringbuffer
 int S_index(int i){
-    return (pvBufStart+i+PV_BUF_LENGTH)%(T_BUF_LENGTH);
+    return (sBufStart+i)%(T_BUF_LENGTH);
 }
+

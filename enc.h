@@ -26,3 +26,4 @@ int PV_index(int i);
 
 //calculate the index of a given char in Searchbuffer in the Ringbuffer
 int S_index(int i);
+
