@@ -13,7 +13,7 @@ typedef struct Match
 void initializePV(FILE *input,char *rbuf);
 
 //does the actual encoding
-void encode(FILE *input, char *rbuf);
+void encode(FILE *input,FILE *output, char *rbuf);
 
 //shifts charsfrom preview to searchbuffer and refills the preview
 void shiftBuf(int num_Of_Chars, FILE *input, char *rbuf);

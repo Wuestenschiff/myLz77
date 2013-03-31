@@ -8,5 +8,13 @@
 extern int sBufStart;
 
 
+//Token musst be matching S_Buf And PV_buf_LEGNTH!!!
+typedef struct Token
+{
+   unsigned int offset:10;
+   unsigned int length:8;
+   unsigned char c;
+}Token;
+
 
 #endif

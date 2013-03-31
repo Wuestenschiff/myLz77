@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include "enc.h"
 
-int fileHasEnded=0;
+
 
 //Fill the PV_buf
 void initializePV(FILE *input, char *rbuf){
@@ -13,11 +13,10 @@ void initializePV(FILE *input, char *rbuf){
     }
     if (c==EOF){
         rbuf[PV_index(i)]=c;
-        fileHasEnded=1;
     }
 }
 
-void encode(FILE *input, char *rbuf){
+void encode(FILE *input, FILE *output, char *rbuf){
     Match match;
     while(rbuf[PV_index(0)]!=EOF){
         match=searchMatch(rbuf);
@@ -34,13 +33,8 @@ void shiftBuf(int num_Of_Chars, FILE *input, char *rbuf){
     sBufStart=(sBufStart+num_Of_Chars)%(T_BUF_LENGTH);
     //refill PV_Buf
     for(i=num_Of_Chars-1; i>=0;i--){
-        if(!fileHasEnded){
-            c=fgetc(input);
-            rbuf[PV_index(PV_BUF_LENGTH-1-i)]=c;
-            if(c==EOF){
-                fileHasEnded=1;
-            }
-        }
+          c=fgetc(input);
+          rbuf[PV_index(PV_BUF_LENGTH-1-i)]=c;
     }
 }
 
