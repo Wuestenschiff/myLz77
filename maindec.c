@@ -1,7 +1,8 @@
 #include "globals.h"
 #include <stdio.h>
 #include <stdlib.h>
-//Ringbuffer ...PV_BUF|S_BUF...
+#include "dec.h"
+//Ringbuffer S_BUF
 char *rbuf;
 
 FILE *input, *output;
@@ -9,7 +10,7 @@ FILE *input, *output;
 int main(int argc, char *argv[])
 {
     if(argc<3){
-        printf("Corect use is\n lz77_dec.e <inputfile> <outputfile>");
+        printf("Corect use is\n lz77_dec.e <inputfile> <outputfile>\n");
         return -1;
     }
     input=fopen(argv[1], "r");
@@ -25,7 +26,6 @@ int main(int argc, char *argv[])
    }
 
     rbuf=(char *)malloc((S_BUF_LENGTH)*sizeof(char));
-    initializeBuf(input,rbuf);
     decode(input,output,rbuf);
     fclose(input);
     fclose(output);

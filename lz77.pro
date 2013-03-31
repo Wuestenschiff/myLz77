@@ -5,9 +5,12 @@ CONFIG -= qt
 
 SOURCES += main.c \
     enc.c \
-    globals.c
+    globals.c \
+    dec.c \
+    maindec.c
 
 HEADERS += \
     enc.h \
-    globals.h
+    globals.h \
+    dec.h
 

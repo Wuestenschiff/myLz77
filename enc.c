@@ -20,7 +20,9 @@ void encode(FILE *input, FILE *output, char *rbuf){
     Match match;
     while(rbuf[PV_index(0)]!=EOF){
         match=searchMatch(rbuf);
-        printf("%d\t%d\t%c\n",match.offset,match.length,rbuf[PV_index(match.length)]);
+     //   printf("%d\t%d\t%c\n",match.offset,match.length,rbuf[PV_index(match.length)]);
+        Token token={match.offset,match.length,rbuf[PV_index(match.length)]};
+        fwrite(&token,sizeof(Token),1,output);
         shiftBuf(match.length+1,input,rbuf);
     }
 
